@@ -16,7 +16,7 @@ function Bookings() {
           </div>
         ) : (
           bookings.map((booking, i) => (
-            <div className='booking-card'>
+            <div key={i} className='booking-card'>
               <div className='booking-card-info'>
                 <h3>{booking.name}</h3>
                 <p>{booking.location}</p>

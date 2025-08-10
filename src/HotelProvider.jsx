@@ -1,6 +1,7 @@
 import { useState } from "react";
 import HotelContext from "./HotelContext";
 import { toast } from 'react-toastify';
+import { useEffect } from "react";
 
 const sampleHotels = [
   { id: 1, name: 'Grand Palace Hotel', price: 120, location: 'New York' },
@@ -60,14 +61,25 @@ const HotelProvider = ({children}) => {
     const [hotels] = useState(sampleHotels)
     const [bookings, setBookings] = useState([])
 
+    useEffect(()=>{
+        const savedBookings=JSON.parse(localStorage.getItem("details")) || [];
+
+        setBookings(savedBookings);
+    },[])
+
     const bookHotel = (hotel, from, to) => {
-        console.log([...bookings, { ...hotel, from, to, bookingId: Date.now() }])
+        const newBook=[...bookings, { ...hotel, from, to, bookingId: Date.now() }];
         setBookings([...bookings, { ...hotel, from, to, bookingId: Date.now() }])
+        localStorage.setItem("details",JSON.stringify(newBook));
         toast.success('Booking successfully done !!!')
     }
 
     const deleteBooking = (bookingId) => {
-        setBookings(bookings.filter((booking) => booking.bookingId !== bookingId))
+        const dltBook=(bookings.filter((booking)=>booking.bookingId!=bookingId));
+
+        localStorage.setItem("details", JSON.stringify(dltBook));
+        setBookings(dltBook)
+
         toast.error("Booking deleted !!")
     }
 
